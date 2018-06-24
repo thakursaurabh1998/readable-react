@@ -14,10 +14,27 @@ export const REQ_CATEGORIES = "REQ_CATEGORIES"
 //   id
 // });
 
-// export const likePost = ({ id }) => ({
-//   type: UPVOTE_POST,
-//   id
-// });
+export const upVotePost = post => ({
+  type: UPVOTE_POST,
+  post
+});
+
+export const upVotePostAPI = id => dispatch => {
+  socialAPI
+    .upVotePost(id)
+    .then(data => dispatch(upVotePost(data)))
+}
+
+export const downVotePost = (post) => ({
+  type: DOWNVOTE_POST,
+  post
+});
+
+export const downVotePostAPI = id => dispatch => {
+  socialAPI
+    .downVotePost(id)
+    .then(data => dispatch(downVotePost(data)))
+}
 
 export const recieveCategories = categories => ({
   type: REQ_CATEGORIES,
@@ -41,13 +58,13 @@ export const getComments = (id) => dispatch => {
     .then(data => dispatch(recieveComments(data)))
 }
 
-export const recievePosts = posts => ({
+export const recievePosts = post => ({
   type: ADD_POST,
-  posts
+  post
 })
 
 export const getPosts = () => dispatch =>{
   socialAPI
     .getPosts()
-    .then(data => dispatch(recievePosts(data)))
+    .then(data => data.map(post => dispatch(recievePosts(post))))
 }

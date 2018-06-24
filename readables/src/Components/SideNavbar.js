@@ -12,6 +12,7 @@ const me = {
   email: "thakursaurabh1998@gmail.com"
 };
 
+
 class SideNavbar extends Component {
   componentDidMount() {
     this.props.fetchCategories();
@@ -20,7 +21,12 @@ class SideNavbar extends Component {
     return (
       <SideNav
         trigger={
-          <Button icon="menu">
+          <Button style={{
+            position: 'fixed',
+            top: '20px',
+            left: '20px',
+            zIndex: '5'
+          }} icon="menu">
           </Button>
         }
         options={{ closeOnClick: true }}
@@ -41,7 +47,7 @@ class SideNavbar extends Component {
   }
 }
 
-const mapStateToProps = ({ post }) => ({ categories: post.categories });
+const mapStateToProps = ({ categories }) => ({ categories: categories.categories });
 
 const mapDispatchToProps = dispatch => ({
   fetchCategories: () => dispatch(getCategories())

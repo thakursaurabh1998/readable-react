@@ -2,9 +2,11 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import user from "../Img/download.png";
 import { Col, Card, Row, Chip, Badge, Button } from "react-materialize";
+import { upVotePostAPI, downVotePostAPI } from "../Actions/actions";
 
 class Posts extends Component {
   render() {
+    const { upVote, downVote } = this.props
     return (
       <Row>
         <Col m={3} s={0} />
@@ -12,13 +14,13 @@ class Posts extends Component {
           {this.props.posts &&
             this.props.posts.map((post, index) => (
               <Card
-                key={index}
+                key={post.id}
                 title={post.title}
                 actions={[
-                  <Col l={3} m={5} s={4}>
-                    <Button key={index} icon="thumb_up" />
+                  <Col key={index} l={3} m={5} s={4}>
+                    <Button onClick={() => upVote(post.id)} key={index+"like"} icon="thumb_up" />
                   </Col>,
-                  <Button key={index} icon="thumb_down" />
+                  <Button onClick={() => downVote(post.id)} key={index+"dislike"} icon="thumb_down" />
                 ]}
               >
                 <Row>{post.body}</Row>
@@ -40,7 +42,15 @@ class Posts extends Component {
 }
 
 const mapStateToProps = ({ post }) => ({
-  posts: post.posts
+  posts: Object.keys(post).map(key => post[key])
 });
 
-export default connect(mapStateToProps)(Posts);
+const mapDispatchToProps = dispatch => ({
+  upVote: id => dispatch(upVotePostAPI(id)),
+  downVote: id => dispatch(downVotePostAPI(id))
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Posts);

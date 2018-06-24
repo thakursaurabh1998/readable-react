@@ -13,7 +13,7 @@ const headers = {
 
 const uuid = () => Math.floor(Math.random() * Math.pow(10, 10)).toString();
 
-
+// returns array of categories
 export const getCategories = () => (
   fetch(`${api}/categories`, { headers })
     .then(res => res.json())
@@ -25,6 +25,7 @@ export const getPostsByCategory = category => (
     .then(res => res.json())
 )
 
+// returns array of posts
 export const getPosts = () => (
   fetch(`${api}/posts`, { headers })
     .then(res => res.json())
@@ -35,6 +36,7 @@ export const getPostsById = id => (
     .then(res => res.json())  
 )
 
+// returns array of comments
 export const getComments = postId => (
   fetch(`${api}/posts/${postId}/comments`, { headers })
     .then(res => res.json())

@@ -27,7 +27,6 @@ class App extends Component {
 }
 
 const mapStateToProps = ({post, comment}) => ({
-  posts: post.posts,
   comments: comment.comments
 })
 

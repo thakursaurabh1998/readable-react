@@ -1,10 +1,5 @@
 import { combineReducers } from 'redux'
-import { ADD_POST, ADD_COMMENT, REQ_CATEGORIES } from "../Actions/actions";
-
-// const postState = {
-//   posts: {
-//   }
-// };
+import { ADD_POST, ADD_COMMENT, REQ_CATEGORIES, UPVOTE_POST, DOWNVOTE_POST } from "../Actions/actions";
 
 const comment = (state = {}, action) => {
   const { comments } = action;
@@ -21,14 +16,38 @@ const comment = (state = {}, action) => {
 }
 
 const post = (state = {}, action) => {
-  const { posts, categories } = action;
+  const { post } = action;
   switch (action.type) {
     case ADD_POST:
     
       return {
         ...state,
-        posts
+        [post.id] : post
       }
+    case UPVOTE_POST:
+      return {
+        ...state,
+        [post.id]: {
+          ...state[post.id],
+          voteScore: state[post.id].voteScore + 1
+        }
+      }
+    case DOWNVOTE_POST:
+      return {
+        ...state,
+        [post.id]: {
+          ...state[post.id],
+          voteScore: state[post.id].voteScore - 1
+        }
+      }
+    default:
+      return state;
+  }
+};
+
+const categories = (state = {}, action) => {
+  const { categories } = action;
+  switch (action.type) {
     case REQ_CATEGORIES:
 
       return {
@@ -38,11 +57,12 @@ const post = (state = {}, action) => {
     default:
       return state;
   }
-};
+}
 
 export default combineReducers({
   post,
-  comment
+  comment,
+  categories
 })
 
 // export default post;

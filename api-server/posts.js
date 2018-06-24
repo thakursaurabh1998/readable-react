@@ -24,6 +24,17 @@ const defaultData = {
     voteScore: -5,
     deleted: false,
     commentCount: 0
+  },
+  "6ni6ok3ym7mf1p33ieod": {
+    id: '6ni6ok3ym7mf1p33ieod',
+    timestamp: 1468479797190,
+    title: 'Redux can be confusing!',
+    body: 'Learning redux can be pretty painful, if you want everything to be in ease, look at practical examples.',
+    author: 'thingone',
+    category: 'redux',
+    voteScore: 0,
+    deleted: false,
+    commentCount: 0
   }
 }
 
