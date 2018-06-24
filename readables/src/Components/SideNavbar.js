@@ -3,7 +3,8 @@ import { SideNav, SideNavItem, Button } from "react-materialize";
 import mypic from "../Img/me.jpg";
 import timeline from "../Img/timeline.jpg";
 import { connect } from "react-redux";
-import { getCategories } from '../Actions/actions'
+import { getCategories } from "../Actions/actions";
+import { Link } from "react-router-dom";
 
 const me = {
   background: timeline,
@@ -11,7 +12,6 @@ const me = {
   name: "Saurabh Thakur",
   email: "thakursaurabh1998@gmail.com"
 };
-
 
 class SideNavbar extends Component {
   componentDidMount() {
@@ -21,33 +21,34 @@ class SideNavbar extends Component {
     return (
       <SideNav
         trigger={
-          <Button style={{
-            position: 'fixed',
-            top: '20px',
-            left: '20px',
-            zIndex: '5'
-          }} icon="menu">
-          </Button>
+          <Button
+            style={{
+              position: "fixed",
+              top: "20px",
+              left: "20px",
+              zIndex: "5"
+            }}
+            icon="menu"
+          />
         }
         options={{ closeOnClick: true }}
       >
         <SideNavItem userView user={me} />
         <SideNavItem subheader>Categories</SideNavItem>
-        <SideNavItem waves href="#">
-          All
-        </SideNavItem>
-        {this.props.categories && this.props.categories.map((category, index) => (
-          <SideNavItem key={index} waves href={"#" + category.path}>
-          {category.name}
-        </SideNavItem>
-        ))}
+          <Link to='/'>All</Link>
+        {this.props.categories &&
+          this.props.categories.map((category, index) => (
+              <Link key={index} to={category.path}>{category.name}</Link>
+          ))}
         <SideNavItem divider />
       </SideNav>
     );
   }
 }
 
-const mapStateToProps = ({ categories }) => ({ categories: categories.categories });
+const mapStateToProps = ({ categories }) => ({
+  categories: categories.categories
+});
 
 const mapDispatchToProps = dispatch => ({
   fetchCategories: () => dispatch(getCategories())

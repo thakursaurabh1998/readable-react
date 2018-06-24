@@ -1,41 +1,42 @@
 import React, { Component } from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import { connect } from 'react-redux'
-import { getPosts, getComments } from './Actions/actions'
-import Posts from './Components/Posts'
-import SideNavbar from './Components/SideNavbar'
+import { connect } from "react-redux";
+import Posts from "./Components/Posts";
+import SideNavbar from "./Components/SideNavbar";
+import { Route, withRouter } from "react-router-dom";
+import PostDetail from "./Components/PostDetail";
 // import { Button, Icon } from "react-materialize";
 
 class App extends Component {
-  componentDidMount() {
-    this.props.fetchPosts();
-    this.props.fetchComments("8xf0y6ziyjabvozdd253nd");
-  }
-
   render() {
     return (
       <div>
-        <SideNavbar/>
+        <SideNavbar />
         <div style={{ textAlign: "center" }}>
           <img src={logo} className="App-logo" alt="logo" />
         </div>
-        <Posts/>
+        <Route exact path="/" render={() => <Posts category="" />} />
+        <Route exact path="/:category/:id" render={() => <PostDetail />} />
+        <Route exact path="/redux" render={() => <Posts category="redux" />} />
+        <Route exact path="/react" render={() => <Posts category="react" />} />
+        <Route
+          exact
+          path="/udacity"
+          render={() => <Posts category="udacity" />}
+        />
       </div>
     );
   }
 }
 
-const mapStateToProps = ({post, comment}) => ({
-  comments: comment.comments
-})
+const mapStateToProps = ({ categories, comment }) => ({
+  comments: comment.comments,
+  categories: categories.categories
+});
 
-const mapDispatchToProps = dispatch => ({
-  fetchPosts : () => dispatch(getPosts()),
-  fetchComments : (id) => dispatch(getComments(id))
-})
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(App);
+export default withRouter(
+  connect(
+    mapStateToProps,
+  )(App)
+);

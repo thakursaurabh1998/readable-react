@@ -8,7 +8,6 @@ export const ADD_POST = "ADD_POST"
 export const ADD_COMMENT = "ADD_COMMENT"
 export const REQ_CATEGORIES = "REQ_CATEGORIES"
 
-
 // export const likeComment = ({ id }) => ({
 //   type: UPVOTE_COMMENT,
 //   id
@@ -47,16 +46,10 @@ export const getCategories = () => dispatch => {
     .then(data => dispatch(recieveCategories(data)))
 }
 
-export const recieveComments = comments => ({
+export const recieveComments = comment => ({
   type: ADD_COMMENT,
-  comments
+  comment
 })
-
-export const getComments = (id) => dispatch => {
-  socialAPI
-    .getComments(id)
-    .then(data => dispatch(recieveComments(data)))
-}
 
 export const recievePosts = post => ({
   type: ADD_POST,
@@ -67,4 +60,23 @@ export const getPosts = () => dispatch =>{
   socialAPI
     .getPosts()
     .then(data => data.map(post => dispatch(recievePosts(post))))
+}
+
+export const getPostById = id => dispatch => {
+  socialAPI
+    .getPostsById(id)
+    .then(data => dispatch(recievePosts(data)))
+}
+
+export const getCommentsByPost = postId => dispatch => {
+  socialAPI
+    .getComments(postId)
+    .then(data => data.map(comment => dispatch(recieveComments(comment))))
+}
+
+export const postComment = comments => dispatch => {
+  const {comment, name, id} = comments
+  socialAPI
+    .comment(comment, name, id)
+    .then(data =>dispatch(recieveComments(data)))
 }
