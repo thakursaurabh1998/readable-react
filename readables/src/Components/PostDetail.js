@@ -34,7 +34,8 @@ class PostDetail extends Component {
     const id = window.location.pathname.split("/")[2];
     let post;
     if (id in this.props.posts) post = this.props.posts[id];
-    else post = 404;
+    else if(Object.keys(this.props.posts).length===0) post = 1;
+    else post=404
     let count = 0;
     return (
       <div>
