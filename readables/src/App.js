@@ -6,25 +6,20 @@ import Posts from "./Components/Posts";
 import SideNavbar from "./Components/SideNavbar";
 import { Route, withRouter } from "react-router-dom";
 import PostDetail from "./Components/PostDetail";
-// import { Button, Icon } from "react-materialize";
+import AddPost from "./Components/AddPost";
 
 class App extends Component {
   render() {
     return (
       <div>
         <SideNavbar />
+        <AddPost/>
         <div style={{ textAlign: "center" }}>
           <img src={logo} className="App-logo" alt="logo" />
         </div>
         <Route exact path="/" render={() => <Posts category="" />} />
         <Route exact path="/:category/:id" render={() => <PostDetail />} />
-        <Route exact path="/redux" render={() => <Posts category="redux" />} />
-        <Route exact path="/react" render={() => <Posts category="react" />} />
-        <Route
-          exact
-          path="/udacity"
-          render={() => <Posts category="udacity" />}
-        />
+        <Route exact path="/:category" render={() => <Posts/>} />
       </div>
     );
   }

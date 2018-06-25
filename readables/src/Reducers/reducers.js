@@ -6,7 +6,8 @@ import {
   UPVOTE_POST,
   DOWNVOTE_POST,
   UPVOTE_COMMENT,
-  DOWNVOTE_COMMENT
+  DOWNVOTE_COMMENT,
+  DELETE_COMMENT
 } from "../Actions/actions";
 
 const comment = (state = {}, action) => {
@@ -33,6 +34,14 @@ const comment = (state = {}, action) => {
           voteScore: state[comment.id].voteScore - 1
         }
       };
+    case DELETE_COMMENT:
+      return {
+        ...state,
+        [comment.id]: {
+          ...state[comment.id],
+          deleted: true
+        }
+      }
     default:
       return state;
   }
