@@ -9,12 +9,8 @@ export const ADD_COMMENT = "ADD_COMMENT"
 export const REQ_CATEGORIES = "REQ_CATEGORIES"
 export const DELETE_POST = "DELETE_POST"
 export const DELETE_COMMENT = "DELETE_COMMENT"
-
-
-// export const likeComment = ({ id }) => ({
-//   type: UPVOTE_COMMENT,
-//   id
-// });
+export const EDIT_POST = "EDIT_POST"
+export const EDIT_COMMENT = "EDIT_COMMENT"
 
 export const upVotePost = post => ({
   type: UPVOTE_POST,
@@ -130,8 +126,31 @@ export const deletePostAPI = id => dispatch => {
 
 export const postPost = posts => dispatch => {
   const {title, body, name, category} = posts
-  console.log(posts)
   socialAPI
     .post(title, body, name, category)
     .then(data =>dispatch(recievePosts(data)))
+}
+
+export const editPost = post => ({
+  type: EDIT_POST,
+  post
+})
+
+export const editPostAPI = posts => dispatch => {
+  const { id, body, title } = posts
+  socialAPI
+    .editPost(id, title, body)
+    .then(data => dispatch(editPost(data)))
+}
+
+export const editComment = comment => ({
+  type: EDIT_COMMENT,
+  comment
+})
+
+export const editCommentAPI = comments => dispatch => {
+  const { id, body } = comments
+  socialAPI
+    .editComment(id, body)
+    .then(data => dispatch(editComment(data)))
 }

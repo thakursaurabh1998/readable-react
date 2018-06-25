@@ -7,7 +7,10 @@ import {
   DOWNVOTE_POST,
   UPVOTE_COMMENT,
   DOWNVOTE_COMMENT,
-  DELETE_COMMENT
+  DELETE_COMMENT,
+  DELETE_POST,
+  EDIT_COMMENT,
+  EDIT_POST
 } from "../Actions/actions";
 
 const comment = (state = {}, action) => {
@@ -41,7 +44,15 @@ const comment = (state = {}, action) => {
           ...state[comment.id],
           deleted: true
         }
-      }
+      };
+    case EDIT_COMMENT:
+      return {
+        ...state,
+        [comment.id]: {
+          ...state[comment.id],
+          body: comment.body
+        }
+      };
     default:
       return state;
   }
@@ -69,6 +80,23 @@ const post = (state = {}, action) => {
         [post.id]: {
           ...state[post.id],
           voteScore: state[post.id].voteScore - 1
+        }
+      };
+    case DELETE_POST:
+      return {
+        ...state,
+        [post.id]: {
+          ...state[post.id],
+          deleted: true
+        }
+      };
+    case EDIT_POST:
+      return {
+        ...state,
+        [post.id]: {
+          ...state[post.id],
+          body: post.body,
+          title: post.title
         }
       };
     default:

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { Row, Col, Button, Input, Card } from "react-materialize";
 import {
@@ -38,7 +38,9 @@ class PostDetail extends Component {
     let count = 0;
     return (
       <div>
-        <Post post={post} />
+        { post===404 && <Redirect to="/404"/> }
+        { post.deleted===true && <Redirect to="/"/>}
+        <Post btns={4} post={post} />
         <Row>
           <Col m={2} s={0} />
           <Col m={8} s={12}>

@@ -22,11 +22,12 @@ class Posts extends Component {
         {this.props.posts &&
           this.props.posts.map((post, index) => {
             if (
-              category === post.category ||
-              category === ""
+              post.deleted === false &&
+              (category === post.category ||
+              category === "")
             ) {
               count++;
-              return <Post key={index} post={post}/>;
+              return <Post btns={2} key={index} post={post}/>;
             }
             return null;
           })}

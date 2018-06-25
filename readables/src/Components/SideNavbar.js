@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { SideNav, SideNavItem, Button } from "react-materialize";
+import { SideNav, SideNavItem, Icon } from "react-materialize";
 import mypic from "../Img/me.jpg";
 import timeline from "../Img/timeline.jpg";
 import { connect } from "react-redux";
@@ -21,24 +21,28 @@ class SideNavbar extends Component {
     return (
       <SideNav
         trigger={
-          <Button
+          <a
+            className="curs"
             style={{
               position: "fixed",
               top: "20px",
               left: "20px",
               zIndex: "5"
             }}
-            icon="menu"
-          />
+          >
+            <Icon>menu</Icon>
+          </a>
         }
         options={{ closeOnClick: true }}
       >
         <SideNavItem userView user={me} />
         <SideNavItem subheader>Categories</SideNavItem>
-          <Link to='/'>All</Link>
+        <Link to="/">All</Link>
         {this.props.categories &&
           this.props.categories.map((category, index) => (
-              <Link key={index} to={category.path}>{category.name}</Link>
+            <Link key={index} to={category.path}>
+              {category.name}
+            </Link>
           ))}
         <SideNavItem divider />
       </SideNav>

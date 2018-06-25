@@ -13,10 +13,10 @@ class AddPost extends Component {
     e.preventDefault();
     const name = e.target[0].value;
     const title = e.target[1].value;
-    const category = e.target[2].value;
-    const body = e.target[3].value;
-    console.log(title,name,body,category);
+    const body = e.target[2].value;
+    const category = e.target[3].value;
     if (name === "" || title === "" || body === "" || category === "") {
+      // console.log(`title:${title}\nname:${name}\ncategory:${category}\nbody:${body}`)
       return;
     }
     this.props.post({ body, name, title, category });
@@ -57,7 +57,8 @@ class AddPost extends Component {
               <Input s={12} m={8} label="Post Title" />
             </Row>
             <Row>
-              <Input s={12} type="select" label="Category">
+              <Input s={12} m={8} type="textarea" label="Post Body" />
+              <Input s={12} m={4} type="select" label="Category">
                 {categories &&
                   categories.map(category => (
                     <option key={category.name} value={category.name}>
@@ -65,12 +66,11 @@ class AddPost extends Component {
                     </option>
                   ))}
               </Input>
-              <Input s={12} m={12} type="textarea" label="Post Body" />
             </Row>
             <Row>
               <Col m={9} s={6} />
               <Button m={3} s={6}>
-                Comment
+                Post
               </Button>
             </Row>
           </form>
