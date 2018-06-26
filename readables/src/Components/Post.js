@@ -107,6 +107,7 @@ class Post extends Component {
                   <Link to={`/${post.category}/${post.id}`}>
                     <Badge newIcon>Comments: {post.commentCount}</Badge>
                   </Link>
+                  <Badge>{(new Date(post.timestamp)).toString().slice(0,24)}</Badge>
                 </Row>
               </Card>
             </Col>
