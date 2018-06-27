@@ -4,6 +4,8 @@ This directory contains both the backend API server and the front end react app.
 
 Project server API cloned from [udacity react nanodegree readable starter](https://github.com/udacity/reactnd-project-readable-starter) repository.
 
+![Image mockup](./readables/ReduxApp.png)
+
 
 ## Want to check this app out?
 

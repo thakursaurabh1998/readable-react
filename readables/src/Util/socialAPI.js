@@ -1,4 +1,4 @@
-const api = "http://192.168.100.7:3001";
+const api = "http://192.168.100.5:3001";
 
 let token = localStorage.token;
 if (!token)
