@@ -12,12 +12,10 @@ const {
   client_id,
   client_secret,
   redirect_uri,
-  state,
-  origin,
-  secret
+  state
 } = require("./config");
-const categories = require("./categories");
-const posts = require("./posts");
+const { categories, posts } = require("./util/util");
+// const posts = require("./posts");
 const comments = require("./comments");
 const { Users } = require("./model/Users");
 const { authenticate } = require("./middleware/authenticate");
@@ -190,22 +188,8 @@ app.get("/", (req, res) => {
   res.send(help);
 });
 
-app.use((req, res, next) => {
-  const token = req.get("Authorization");
-
-  if (token) {
-    req.token = token;
-    next();
-  } else {
-    res.status(403).send({
-      error:
-        "Please provide an Authorization header to identify yourself (can be whatever you want)"
-    });
-  }
-});
-
 app.get("/categories", (req, res) => {
-  categories.getAll(req.token).then(
+  categories.getAll().then(
     data => res.send(data),
     error => {
       console.error(error);
@@ -217,7 +201,7 @@ app.get("/categories", (req, res) => {
 });
 
 app.get("/:category/posts", (req, res) => {
-  posts.getByCategory(req.token, req.params.category).then(
+  posts.getByCategory(req.params.category).then(
     data => res.send(data),
     error => {
       console.error(error);
@@ -241,7 +225,7 @@ app.get("/posts", (req, res) => {
 });
 
 app.post("/posts", (req, res) => {
-  posts.add(req.token, req.body).then(
+  posts.add(req.body).then(
     data => res.send(data),
     error => {
       console.error(error);
@@ -253,7 +237,7 @@ app.post("/posts", (req, res) => {
 });
 
 app.get("/posts/:id", (req, res) => {
-  posts.get(req.token, req.params.id).then(
+  posts.get(req.params.id).then(
     data => res.send(data),
     error => {
       console.error(error);
@@ -265,24 +249,23 @@ app.get("/posts/:id", (req, res) => {
 });
 
 app.delete("/posts/:id", (req, res) => {
-  posts
-    .disable(req.token, req.params.id)
-    .then(post => comments.disableByParent(req.token, post))
-    .then(
-      data => res.send(data),
-      error => {
-        console.error(error);
-        res.status(500).send({
-          error: "There was an error."
-        });
-      }
-    );
+  //disable all comments in the db
+  // .then(post => comments.disableByParent(req.token, post))
+  posts.disable(req.params.id).then(
+    data => res.send(data),
+    error => {
+      console.error(error);
+      res.status(500).send({
+        error: "There was an error."
+      });
+    }
+  );
 });
 
 app.post("/posts/:id", (req, res) => {
   const { option } = req.body;
   const id = req.params.id;
-  posts.vote(req.token, id, option).then(
+  posts.vote(id, option).then(
     data => res.send(data),
     error => {
       console.error(error);
@@ -294,7 +277,7 @@ app.post("/posts/:id", (req, res) => {
 });
 
 app.put("/posts/:id", (req, res) => {
-  posts.edit(req.token, req.params.id, req.body).then(
+  posts.edit(req.params.id, req.body).then(
     data => res.send(data),
     error => {
       console.error(error);
