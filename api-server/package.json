@@ -1,24 +1,31 @@
 {
-  "name": "reddit-clone-server",
+  "name": "discussion-forum-server",
   "version": "0.0.1",
-  "description": "A server for the Udacity Reddit Clone project for ReactND",
+  "description": "Backend Server For Discussion Forum",
   "main": "index.js",
   "keywords": [
-    "udacity",
     "redux",
     "readable",
     "react"
   ],
-  "author": "David Harris",
+  "author": "Saurabh Thakur",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.17.1",
+    "clone": "^2.1.1",
+    "cookie-parser": "^1.4.3",
     "cors": "^2.8.3",
+    "crypto-js": "^3.1.9-1",
     "dotenv": "^4.0.0",
     "express": "^4.15.2",
-    "clone": "^2.1.1"
+    "jsonwebtoken": "^8.3.0",
+    "mongoose": "^5.3.9",
+    "request": "^2.88.0",
+    "validator": "^10.8.0"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "watch": "nodemon server.js"
   }
 }
