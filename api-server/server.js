@@ -5,7 +5,7 @@ const request = require("request");
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
 const {
   port,
@@ -15,7 +15,6 @@ const {
   state
 } = require("./config");
 const { categories, posts } = require("./util/util");
-// const posts = require("./posts");
 const comments = require("./comments");
 const { Users } = require("./model/Users");
 const { authenticate } = require("./middleware/authenticate");
@@ -34,15 +33,30 @@ app.use((req, res, next) => {
   next();
 });
 
+app.post("/user/login", (req, res) => {
+  const { email, password } = req.body;
+
+  Users.findByCredentials(email, password)
+    .then(user => {
+      return user.generateAuthToken().then(token => {
+        res
+          .set("x-auth", token)
+          .status(200)
+          .send(user);
+      });
+    })
+    .catch(err => {
+      res.status(401).send({ error: "Password Incorrect" });
+    });
+});
+
 app.post("/signup", (req, res) => {
   const { email, password } = req.body;
   const user = new Users({ email, password });
 
   user
     .save()
-    .then(user => {
-      return user.generateAuthToken();
-    })
+    .then(user => user.generateAuthToken())
     .then(token => {
       res.header("x-auth", token).send(user);
     })
@@ -212,7 +226,7 @@ app.get("/:category/posts", (req, res) => {
   );
 });
 
-app.get("/posts", (req, res) => {
+app.get("/posts", authenticate, (req, res) => {
   posts.getAll(req.token).then(
     data => res.send(data),
     error => {

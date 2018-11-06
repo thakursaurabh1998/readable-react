@@ -82,16 +82,31 @@ UserSchema.statics.findByToken = function(token) {
   });
 };
 
+// find by credentials
+UserSchema.statics.findByCredentials = function(email, password) {
+  const User = this;
+
+  return User.findOne({ email }).then(user => {
+    if (!user) return Promise.reject();
+    return new Promise((resolve, reject) => {
+      bcrypt.compare(password, user.password).then(comp => {
+        if (comp) resolve(user);
+        else reject();
+      });
+    });
+  });
+};
+
 // mongodb runs this middleware before saving the document
 UserSchema.pre("save", function(next) {
   const user = this;
-  if(user.isModified('password')) {
+  if (user.isModified("password")) {
     bcrypt.genSalt(10, (err, salt) => {
       bcrypt.hash(user.password, salt, (err, hash) => {
         user.password = hash;
         next();
-      })
-    })
+      });
+    });
   } else {
     next();
   }
