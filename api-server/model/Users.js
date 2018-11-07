@@ -5,11 +5,11 @@ const { secret } = require("../config");
 const bcrypt = require("bcryptjs");
 
 const UserSchema = new mongoose.Schema({
-  // name: {
-  //   type: String,
-  //   required: true,
-  //   trim: true
-  // },
+  name: {
+    type: String,
+    required: true,
+    trim: true
+  },
   email: {
     type: String,
     required: true,
@@ -22,7 +22,7 @@ const UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    // required: true,r
     minlength: 8
   },
   tokens: [
@@ -37,7 +37,7 @@ const UserSchema = new mongoose.Schema({
       }
     }
   ],
-  avatar: {
+  avatar_url: {
     type: String
   }
 });
@@ -53,15 +53,29 @@ UserSchema.methods.generateAuthToken = function() {
     token
   });
 
-  return user.save().then(() => token);
+  return user.save().then(() => {
+    return { token, user };
+  });
 };
 
 // overrides the json document which is returned after performing a function
 UserSchema.methods.toJSON = function() {
   const user = this;
-  const { _id, email } = user.toObject();
+  const { _id, email, name, avatar_url } = user.toObject();
 
-  return { _id, email };
+  return { _id, email, name, avatar_url };
+};
+
+UserSchema.methods.removeToken = function(token) {
+  const user = this;
+
+  return user.update({
+    $pull: {
+      tokens: {
+        token
+      }
+    }
+  });
 };
 
 // custom findby to find document by token

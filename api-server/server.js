@@ -33,9 +33,20 @@ app.use((req, res, next) => {
   next();
 });
 
+app.delete("/users/me/token", authenticate, (req, res) => {
+  // user object is set in authenticate middleware in authenticate.js
+  req.user.removeToken(req.token).then(
+    () => {
+      res.status(200).send();
+    },
+    () => {
+      res.status(400).send();
+    }
+  );
+});
+
 app.post("/user/login", (req, res) => {
   const { email, password } = req.body;
-
   Users.findByCredentials(email, password)
     .then(user => {
       return user.generateAuthToken().then(token => {
@@ -65,35 +76,68 @@ app.post("/signup", (req, res) => {
     });
 });
 
+app.post("/logout", authenticate, (req, res) => {
+  req.user
+    .removeToken(req.token)
+    .then(data => {
+      res.status(200).send();
+    })
+    .catch(err => {
+      res.status(400).send();
+    });
+});
+
 app.get("/users/me", authenticate, (req, res) => {
   res.send(req.user);
 });
 
 app.get("/oauth/redirect", (req, res) => {
   let code;
-  // console.log("params", req.params);
   if (req.query.error) {
     console.log(JSON.stringify(req.query.error_description));
   } else {
-    console.log("PARA", req.query);
     code = req.query.code;
-    console.log(`got the code ${JSON.stringify(code, null, 4)}`);
-  }
-
-  request.post(
-    {
-      headers: { Accept: "application/json" },
-      url: `https://github.com/login/oauth/access_token?client_id=${client_id}&client_secret=${client_secret}&code=${code}&redirect_uri=${redirect_uri}&state=${state}`
-    },
-    (error, response, body) => {
-      if (error) res.status(400).send(error);
-      else {
-        console.log(body);
-        res.cookie("access-token", JSON.parse(body).access_token);
-        res.status(200).send(body);
+    request.post(
+      {
+        headers: { Accept: "application/json" },
+        url: `https://github.com/login/oauth/access_token?client_id=${client_id}&client_secret=${client_secret}&code=${code}&redirect_uri=${redirect_uri}&state=${state}`
+      },
+      (error, response, body) => {
+        if (error) res.status(400).send(error);
+        else {
+          request.get(
+            {
+              headers: {
+                Accept: "application/json",
+                Authorization: "token " + JSON.parse(body).access_token,
+                "User-Agent": "thakursaurabh1998"
+              },
+              url: `https://api.github.com/user`
+            },
+            (error, response, body) => {
+              const { email, avatar_url, name } = JSON.parse(body);
+              const user = new Users({ email, avatar_url, name });
+              user
+                .save()
+                .then(u => u.generateAuthToken())
+                .then(obj => {
+                  res.cookie("x-auth", obj.token).res(obj.user);
+                })
+                .catch(err => {
+                  console.log(err);
+                  Users.findOne({ email })
+                    .then(u => u.generateAuthToken())
+                    .then(obj => {
+                      res.cookie("x-auth", obj.token).send(obj.user);
+                    })
+                    .catch(err => res.status(404).send(err));
+                });
+            }
+          );
+        }
       }
-    }
-  );
+    );
+  }
 });
 
 app.get("/login", (req, res) => {
